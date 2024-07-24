@@ -21,7 +21,7 @@ from django.shortcuts import redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', lambda request: redirect('upload_audio'), name='home'),
-    path('upload', include('transcriptionApp.urls')),
-    path('transcription/<int:pk>', include('transcriptionApp.urls')),
+    # path('', lambda request: redirect('upload_audio'), name='home'),
+    # path('upload', include('transcriptionApp.urls')),
+    path('', include('transcriptionApp.urls')),
 ]
