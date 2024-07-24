@@ -1,5 +1,6 @@
 from django import forms
 from .models import AudioFile
+from .validators import AudioFileValidator
 
 
 class AudioFileForm(forms.ModelForm):
@@ -15,3 +16,4 @@ class AudioFileForm(forms.ModelForm):
                 'class':'class:flex w-full p-1 border border-gray-300 bg-gray-100 rounded-md border-none outline-none',
             }),
         }
+        audio = forms.FileField(validators=[AudioFileValidator()])
