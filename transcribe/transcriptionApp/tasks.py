@@ -12,6 +12,7 @@ def transcribe_audio_task(file_url, audio_file_id):
     try:
         # Download the file
         file_path = download_tempfile_from_url(file_url)
+        audio_file = AudioFile.objects.get(pk=audio_file_id)
 
         if os.path.getsize(file_path) > 25 * 1024 * 1024:
             # Split large files into chunks
@@ -22,7 +23,6 @@ def transcribe_audio_task(file_url, audio_file_id):
         else:
             audio_file.transcription = transcribe_audio(file_path)
         # Update the AudioFile model
-        audio_file = AudioFile.objects.get(pk=audio_file_id)
         audio_file.save()
 
         # Clean up the temporary file
