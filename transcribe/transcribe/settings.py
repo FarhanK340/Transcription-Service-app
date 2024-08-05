@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'storages',
     'chatApp.apps.ChatappConfig',
     'channels',
+    'liveTranscription.apps.LivetranscriptionConfig'
 ]
 
 MIDDLEWARE = [
@@ -61,7 +62,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [BASE_DIR / 'templates',
-                 BASE_DIR / 'chatApp/templates'
+                 BASE_DIR / 'chatApp/templates',
+                 BASE_DIR / 'liveTranscription',
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -75,7 +77,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'transcribe.wsgi.application'
+# WSGI_APPLICATION = 'transcribe.wsgi.application'
 
 # ASGI setting
 ASGI_APPLICATION = 'transcribe.asgi.application'
@@ -154,13 +156,13 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 # Channels settings
 CHANNEL_LAYERS = {
-    # 'default': {
-    #     'BACKEND': 'channels.redis.core.RedisChannelLayer',
-    #     'CONFIG': {
-    #         "hosts":  [('127.0.0.1', 6379)],
-    #     },
-    # },
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts":  [('127.0.0.1', 6379)],
+        },
     },
+    # 'default': {
+    #     'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    # },
 }
