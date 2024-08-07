@@ -1,36 +1,42 @@
 import os
-import tempfile
-import uuid
 from celery import shared_task
 from whisper import load_model
-from channels.db import database_sync_to_async
-from .models import Session, Transcription
 
 
 @shared_task
-def transcribe_audio_chunk(bytes_data, context, session_name):
+def transcribe_audio_chunk(bytes_data, session_name):
     """
     Asynchronous task to transcribe audio.
+
+    Args:
+        bytes_data (bytes): The audio data in bytes.
+        session_name (str): The name of the session used to generate the file name.
+
+    Returns:
+        str: The transcribed text from the audio file.
+
+    Raises:
+        Exception: If an error occurs during transcription.
     """
     try:
+        # Load Whisper model
         model = load_model('base')
-    
-        # Save the audio chunk temporarily to disk
-        with tempfile.NamedTemporaryFile(delete=False, prefix=session_name, suffix=".webm") as temp_audio_file:
-            temp_audio_file.write(bytes_data)
-            temp_audio_file.flush()
-            temp_audio_file_path = temp_audio_file.name
 
-        if not os.path.isfile(temp_audio_file_path) or os.path.getsize(temp_audio_file_path) == 0:
-            raise Exception(f"Temporary file not created or is empty: {temp_audio_file_path}")
+        # Get Path to Desktop where audio file will be stored.
+        PERMANENT_FILE_PATH = os.path.join(os.path.join(
+            os.path.expanduser("~"), "Desktop"), f"{session_name}.wav")
 
+        # Append the bytes to the permanent file
+        with open(PERMANENT_FILE_PATH, 'ab') as perm_file:
+            perm_file.write(bytes_data)
+
+        # Transcribe the permanent file
         transcription_result = model.transcribe(
-            temp_audio_file_path, language='en', initial_prompt=context)
-        os.remove(temp_audio_file_path)
+            PERMANENT_FILE_PATH, language='en')
 
         return transcription_result['text']
     except Exception as e:
         error_message = f"Failed to transcribe audio file: {
-            temp_audio_file_path}. Error: {str(e)}"
+            PERMANENT_FILE_PATH}. Error: {str(e)}"
         print(error_message)
         raise Exception(error_message)
