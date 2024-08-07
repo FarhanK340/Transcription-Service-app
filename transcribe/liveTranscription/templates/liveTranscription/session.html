@@ -70,7 +70,7 @@
           mediaRecorder.ondataavailable = (event) => {
             if (event.data.size > 0) {
               const audioBlob = new Blob([event.data], { type: 'audio/wav' })
-              sendAudio(audioBlob)
+              socket.send(audioBlob)
             }
           }
     
@@ -89,14 +89,6 @@
     function endRecording() {
       mediaRecorder.stop()
       document.getElementById('recording').innerText = "Audio Transcription"
-    }
-    
-    function sendAudio(blob) {
-      const reader = new FileReader()
-      reader.onload = () => {
-        socket.send(reader.result)
-      }
-      reader.readAsArrayBuffer(blob)
     }
   </script>
 </html>
