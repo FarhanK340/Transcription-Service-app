@@ -20,7 +20,7 @@ class AudioConsumer(AsyncWebsocketConsumer):
         )
         await self.accept()
 
-    async def disconnect(self):
+    async def disconnect(self, close_code):
         """
         Called when the WebSocket connection is closed.
         Removes the consumer from the session group.
