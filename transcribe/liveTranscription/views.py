@@ -26,20 +26,22 @@ def CreateSession(request):
 
 def TranscriptionView(request, session_name):
     """
-    Display the transcription for a given session
+    Display the transcription for a given session.
     """
     try:
         # Retrieve the session object
         get_session = get_object_or_404(Session, session_name=session_name)
         
-        # Retrieve the transcription object
-        get_transcription = get_object_or_404(Transcription, session=get_session.pk)
-        transcription = get_transcription.transcription
-
+        # Attempt to retrieve the transcription object
+        get_transcription = Transcription.objects.filter(session=get_session).first()
+        if get_transcription:
+            transcription = get_transcription.transcription
+        else:
+            transcription = ""
+            
     except Exception as e:
         # Log the error or handle it as needed
         print(f'Error encountered: {e}')
-        transcription = 'An error occurred while retrieving the transcription.'
 
     context = {
         'transcription': transcription,

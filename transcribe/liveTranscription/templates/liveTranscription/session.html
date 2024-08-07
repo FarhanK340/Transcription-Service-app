@@ -70,7 +70,8 @@
           mediaRecorder.ondataavailable = (event) => {
             if (event.data.size > 0) {
               const audioBlob = new Blob([event.data], { type: 'audio/wav' })
-              sendAudio(audioBlob)
+              // sendAudio(audioBlob)
+              socket.send(audioBlob)
             }
           }
     
