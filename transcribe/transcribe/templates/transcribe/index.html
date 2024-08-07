@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome</title>
+</head>
+<body>
+    <h1>Welcome to Transcription and Chat App</h1>
+    <ul>
+        <li><a href="{% url 'transcriptionApp:upload_audio' %}">Transcribe App</a></li>
+        <li><a href="{% url 'chatApp:create-room' %}">Chat App</a></li>
+        <li><a href="{% url 'liveTranscription:create-session' %}">Live Transcription App</a></li>
+    </ul>
+</body>
+</html>

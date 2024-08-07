@@ -11,11 +11,10 @@ def CreateRoom(request):
 
         try:
             get_room = Room.objects.get(room_name=room)
-            # return redirect('room', room_name=room, username=username)
         except Room.DoesNotExist:
             new_room = Room(room_name=room)
             new_room.save()
-        return redirect('room', room_name=room, username=username)
+        return redirect('chatApp:room', room_name=room, username=username)
 
 
     return render(request, 'chatApp/index.html')

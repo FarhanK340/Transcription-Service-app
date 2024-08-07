@@ -23,7 +23,7 @@
   <script>
     // Determine the WebSocket protocol based on the application's url
     const websocketProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
-    const wsEndpoint = `${websocketProtocol}://${window.location.host}/ws/notification/{{session_name}}/`
+    const wsEndpoint = `${websocketProtocol}://${window.location.host}/ws/{{session_name}}/`
     
     // Create a new WebSocket connection
     const socket = new WebSocket(wsEndpoint)

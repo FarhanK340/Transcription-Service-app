@@ -63,7 +63,8 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [BASE_DIR / 'templates',
                  BASE_DIR / 'chatApp/templates',
-                 BASE_DIR / 'liveTranscription',
+                 BASE_DIR / 'liveTranscription/templates',
+                 BASE_DIR / 'transcribe/templates',
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -77,7 +78,7 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'transcribe.wsgi.application'
+WSGI_APPLICATION = 'transcribe.wsgi.application'
 
 # ASGI setting
 ASGI_APPLICATION = 'transcribe.asgi.application'

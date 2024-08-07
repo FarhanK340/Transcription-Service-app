@@ -18,7 +18,7 @@ def upload_audio(request):
             try:
                 # Trigger the asynchronous transcription task
                 transcribe_audio_task.delay(file_url, audio_file.pk)
-                return redirect('transcription', pk=audio_file.pk)
+                return redirect('transcriptionApp:transcription', pk=audio_file.pk)
             except Exception as e:
                 form.add_error(None, str(e))
     else:

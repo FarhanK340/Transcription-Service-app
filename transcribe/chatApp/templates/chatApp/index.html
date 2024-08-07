@@ -4,77 +4,21 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Enter Room</title>
   </head>
-  <body>
-    <div class="parent">
-      <div class="child">
-        <h1>Enter Room</h1>
-        <form action="" method="POST">
-          {% csrf_token %}
-          <label for="username">Username</label><br />
-          <input id="username" type="text" placeholder="Username" name="username" required /><br />
-          <label for="room_name">Room name</label><br />
-          <input id="room_name" type="text" placeholder="room name" name="room" required /><br />
-          <center>
-            <button type="submit">Submit</button>
-          </center><br />
-        </form>
-      </div>
+  <body class="flex flex-col justify-center items-center h-screen w-full bg-teal-800 font-serif">
+    <div class="flex flex-col justify-center items-center bg-teal-950 p-8 rounded-xl shadow-lg shadow-black w-1/2">
+      <h1 class="text-2xl font-semibold mb-2 text-white">Enter Room</h1>
+      <form action="" method="POST" class="space-y-3 w-full">
+        {% csrf_token %}
+          <label for="username" class="flex font-serif text-[20px] font-medium w-full text-white">Username</label>
+          <input id="username" type="text" placeholder="Username" name="username" required class="flex w-full p-2 border border-gray-300 rounded-md border-none outline-none" />
+          <label for="room" class="flex font-serif text-[20px] font-medium w-full text-white">Room Name</label>
+          <input id="room" type="text" placeholder="Room Name" name="room" required class="flex w-full p-2 border border-gray-300 rounded-md border-none outline-none" />
+        <button type="submit" class="w-full bg-teal-800 text-white shadow-lg shadow-black font-bold p-2 rounded-md hover:bg-teal-700 hover:shadow-lg hover:shadow-teal-500">Submit</button>
+      </form>
+      <a href="{% url 'manage_routing' %}" class="mt-6 text-white font-bold hover:text-teal-400">Return to Home Page</a>
     </div>
   </body>
-  <style>
-    * {
-      padding: 0;
-      margin: 0;
-      box-sizing: border-box;
-    }
-    
-    .parent {
-      background-color: #daad86;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-    }
-    
-    .child {
-      display: flex;
-      background-color: #659dbd;
-      height: 80vh;
-      width: 50%;
-      border-radius: 10px;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: 100px;
-    }
-    
-    form {
-      width: 80%;
-    }
-    
-    input {
-      padding: 10px;
-      border: 1px solid dodgerblue;
-      width: 100%;
-      margin: 10px;
-      border-radius: 5px;
-    }
-    
-    button {
-      background-color: #daad86;
-      padding: 10px;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      width: 20%;
-    }
-    
-    button:hover {
-      padding: 15px;
-      transition: 0.8s;
-    }
-  </style>
 </html>
