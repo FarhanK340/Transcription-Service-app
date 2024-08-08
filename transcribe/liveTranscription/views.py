@@ -13,7 +13,7 @@ def CreateSession(request):
             session_name = form.cleaned_data['session_name']
             session_name = session_name.replace(' ', '_')
             Session.objects.get_or_create(session_name=session_name)
-            return redirect('session', session_name=session_name)
+            return redirect('liveTranscription:session', session_name=session_name)
     else:
         form = SessionForm()
 
