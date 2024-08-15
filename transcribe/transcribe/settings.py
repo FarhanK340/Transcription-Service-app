@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'transcriptionApp.apps.TranscriptionappConfig',
     'storages',
+    'chatApp.apps.ChatappConfig',
+    'channels',
+    'liveTranscription.apps.LivetranscriptionConfig'
 ]
 
 MIDDLEWARE = [
@@ -57,7 +61,11 @@ ROOT_URLCONF = 'transcribe.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates',
+                 BASE_DIR / 'chatApp/templates',
+                 BASE_DIR / 'liveTranscription/templates',
+                 BASE_DIR / 'transcribe/templates',
+                 ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,6 +79,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'transcribe.wsgi.application'
+
+# ASGI setting
+ASGI_APPLICATION = 'transcribe.asgi.application'
 
 
 # Database
@@ -129,12 +140,27 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
- 
+
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY') 
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME')   
+AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME')
 
 # For serving static files directly from S3
 AWS_S3_USE_SSL = True
 AWS_S3_VERIFY = True
+
+# Celery settings
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
+# Channels settings
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts":  [('127.0.0.1', 6379)],
+        },
+    },
+}

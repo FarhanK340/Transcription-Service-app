@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Messages</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="flex justify-center items-center h-screen w-full bg-teal-800 bg-fixed bg-no-repeat">
+    <div class="flex flex-col justify-center items-center bg-teal-950 my-10 p-8 rounded-xl shadow-lg shadow-black w-1/2 text-white max-h-[90vh]">
+      <h2 class="text-2xl font-semibold mb-4">Chat Room: {{room_name}}</h2>
+      <hr class="border-gray-700 w-full mb-4" />
+      <div class="w-full overflow-y-auto h-96 no-scrollbar" id="tasks">
+        <div class="flex flex-col space-y-4 p-4 bg-teal-900 rounded-lg no-scrollbar" id="chatContainer">
+          <!-- received messages and displayed here -->
+          {% for i in messages %}
+            {% if i.sender != user %}
+              <div class="receive p-2 bg-teal-700 rounded-lg">
+                <p class="text-[12px] font-bold underline underline-offset-4">{{i.sender}}</p>
+                <p class="text-white font-mono">
+                  {{ i.message }}
+                </p>
+              </div>
+            {% else %}
+              <div class="send p-2 bg-teal-600 rounded-lg self-end">
+                <p class="text-white font-mono">{{ i.message }}</p>
+              </div>
+            {% endif %}
+          {% endfor %}
+          <!-- end receive messages -->
+        </div>
+        <form action="" id="message-form" method="POST" class="flex items-center w-full mt-4">
+          {% csrf_token %}
+          <textarea id="msg" name="message" rows="1" placeholder="Enter your message" required class="flex-grow px-4 py-2 mr-2 rounded-lg  bg-teal-800 text-white w-full outline-none border-none font-mono"></textarea>
+          <button type="submit" class="bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 font-bold border-none outline-none transition duration-300">Send</button>
+        </form>
+      </div>
+      <a href="{% url 'chatApp:create-room' %}" class="mt-4 text-white font-bold hover:text-teal-400">Exit Chat</a>
+    </div>
+  </body>
+  
+  <script>
+    // Determine the WebSocket protocol based on the application's url
+    const websocketProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
+    const wsEndpoint = `${websocketProtocol}://${window.location.host}/ws/notification/{{room_name}}/`
+    
+    // Create a new WebSocket connection
+    const socket = new WebSocket(wsEndpoint)
+    
+    // Successful connection event
+    socket.onopen = (event) => {
+      console.log('WebSocket Connection opened!')
+    }
+    
+    // Successful disconnect event
+    socket.onclose = (event) => {
+      console.log('WebSocket Connection close!')
+    }
+    
+    
+    function scrollToBottom() {
+      var chatContainer = document.getElementById('tasks')
+      chatContainer.scrollTop = chatContainer.scrollHeight
+    }
+  
+    window.onload = function() {
+      scrollToBottom();
+    }
+
+    // Form submit listener
+    document.getElementById('message-form').addEventListener('submit', function (event) {
+      event.preventDefault()
+      const message = document.getElementById('msg').value
+      socket.send(
+        JSON.stringify({
+          message: message,
+          room_name: '{{room_name}}',
+          sender: '{{user}}'
+        })
+      )
+    })
+    
+    // Response from consumer on the server
+    socket.addEventListener('message', (event) => {
+      const messageData = JSON.parse(event.data)['message']
+    
+      var sender = messageData['sender']
+      var message = messageData['message']
+    
+      // Empty the message input filed after the message has been sent
+      if (sender == '{{user}}') {
+        document.getElementById('msg').value = ''
+      }
+    
+      // Append the message to the chatbox
+      var chatContainer = document.getElementById('chatContainer');
+      var messageDiv = document.createElement('div');
+      var senderPara = document.createElement('p');
+      var messagePara = document.createElement('p');
+
+      if (sender != '{{user}}') {
+        messageDiv.className = 'receive p-2 bg-teal-700 rounded-lg';
+        senderPara.className = 'text-[12px] font-bold underline underline-offset-4';
+        senderPara.innerText = sender;
+      } else {
+        messageDiv.className = 'send p-2 bg-teal-600 rounded-lg self-end';
+      }
+      
+      messagePara.className = 'text-white font-mono';
+      messagePara.innerText = message;
+
+      if (sender != '{{user}}') {
+        messageDiv.appendChild(senderPara);
+      }
+      messageDiv.appendChild(messagePara);
+      chatContainer.appendChild(messageDiv);
+
+      scrollToBottom();
+    })
+  </script>
+
+  <style>
+    /* Hide the scrollbar */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+  
+    .no-scrollbar {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+  </style>
+</html>

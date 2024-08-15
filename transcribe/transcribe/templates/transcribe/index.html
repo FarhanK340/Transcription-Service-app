@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Transcription and Chat App</title>
+</head>
+<body class="flex flex-col bg-gradient-to-b from-teal-600 to-teal-950 bg-no-repeat bg-fixed h-screen">
+
+    <nav class="bg-teal-950 shadow-lg border-b-[1.5px] border-black">
+        <div class="w-full flex flex-wrap items-center justify-between p-4">
+            <a href="#" class="text-white text-2xl font-bold">Transcription & Chat App</a>
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'transcriptionApp:upload_audio' %}" class="text-white hover:text-gray-300">Transcribe App</a>
+                <a href="{% url 'chatApp:create-room' %}" class="text-white hover:text-gray-300">Chat App</a>
+                <a href="{% url 'liveTranscription:create-session' %}" class="text-white hover:text-gray-300">Live Transcription App</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content w-full flex flex-col justify-center items-center text-white">
+        <h1 class="text-4xl font-bold mt-10">Welcome to Transcription and Chat App</h1>
+        <p class="mt-5 text-lg font-semibold">Choose an app to get started:</p>
+        <ul class="mt-8 space-y-3">
+            <li><a href="{% url 'transcriptionApp:upload_audio' %}" class="hover:text-blue-400">Transcribe App</a></li>
+            <li><a href="{% url 'chatApp:create-room' %}" class="hover:text-blue-400">Chat App</a></li>
+            <li><a href="{% url 'liveTranscription:create-session' %}" class="hover:text-blue-400">Live Transcription App</a></li>
+        </ul>
+    </div>
+
+    <footer class="flex justify-center items-center w-full py-2 mt-auto bg-black bg-opacity-80 font-mono">
+        <p class="text-white text-sm">&copy; 2024 Transcription and Chat App. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
